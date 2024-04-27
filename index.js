@@ -1,7 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const { query } = require('express');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -31,11 +32,72 @@ async function run() {
 
         //add form theke db te pathabo
         //client e fetch operation korte hbe..so go to client and send data into body
-        app.post('/addcraft', async (req, res) => {
+        app.post('/craft', async (req, res) => {
             console.log(req.body);
             const result = await craftCollection.insertOne(req.body);
             console.log(result);
             res.send(result); //result jabe client er .then er votore je data ace oikhane
+        })
+
+        app.get('/craft', async(req, res) =>{
+            //onekgula data tai array te convert kore nilam
+            const result = await craftCollection.find({}).toArray();
+            res.send(result);
+        })
+
+        //mylist show korar jonno
+        app.get('/craft/:email', async(req, res) =>{
+            //onekgula data tai array te convert kore nilam
+            const result = await craftCollection.find({email: req.params.email}).toArray();
+            res.send(result);
+        })
+
+        //details page er jonno
+        app.get('/singleProduct/:id', async(req,res) =>{
+            //_id dia khujle ObjectId use korte hbe
+            const result = await craftCollection.findOne({_id: new ObjectId(req.params.id)});
+            res.send(result);
+            //console.log(result);
+        })
+
+        //update product korar jonno data fetch kore client e dekhabo
+        app.get('/updateProduct/:id', async(req,res) =>{ 
+            const result = await craftCollection.findOne({_id: new ObjectId(req.params.id)});
+            res.send(result);
+           
+        })
+
+        //client side e update confirm korar por
+        app.put('/updateProduct/:id', async(req,res) =>{
+            const query = {_id: new ObjectId(req.params.id)}
+            const updatedData = req.body;
+            const options = { upsert: true }
+            const data = {
+                $set: {
+                    name: updatedData.name,
+                    subcategory: updatedData.subcategory, 
+                    description: updatedData.description, 
+                    price: updatedData.price,
+                    rating: updatedData.rating, 
+                    time: updatedData.time, 
+                    customization: updatedData.customization, 
+                    stockStatus: updatedData.stockStatus, 
+                    photo: updatedData.photo
+                },
+            };
+
+            const result = await craftCollection.updateOne(query,data,options);
+            console.log(result);
+
+            res.send(result);
+        })
+
+        app.delete('/delete/:id', async(req,res) =>{
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await craftCollection.deleteOne(query);
+            console.log(result);
+            res.send(result);
         })
 
         // Send a ping to confirm a successful connection
