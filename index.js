@@ -53,6 +53,15 @@ async function run() {
             res.send(result);
         })
 
+        //single category er element gula pawar jonno
+        app.get('/allCategory/:subcategory', async (req, res) => {
+            const subcategory = req.params.subcategory;
+            const query = {subcategory: subcategory}
+            const result = await craftCollection.find(query).toArray();
+            res.send(result);
+            console.log(result)
+        })
+
         //mylist show korar jonno
         app.get('/craft/:email', async (req, res) => {
             //onekgula data tai array te convert kore nilam
