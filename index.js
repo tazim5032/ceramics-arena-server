@@ -39,66 +39,78 @@ async function run() {
             res.send(result); //result jabe client er .then er votore je data ace oikhane
         })
 
-        app.get('/craft', async(req, res) =>{
+        app.get('/craft', async (req, res) => {
             //onekgula data tai array te convert kore nilam
             const result = await craftCollection.find({}).toArray();
             res.send(result);
         })
 
         //mylist show korar jonno
-        app.get('/craft/:email', async(req, res) =>{
+        app.get('/craft/:email', async (req, res) => {
             //onekgula data tai array te convert kore nilam
-            const result = await craftCollection.find({email: req.params.email}).toArray();
+            const result = await craftCollection.find({ email: req.params.email }).toArray();
             res.send(result);
         })
 
         //details page er jonno
-        app.get('/singleProduct/:id', async(req,res) =>{
+        app.get('/singleProduct/:id', async (req, res) => {
             //_id dia khujle ObjectId use korte hbe
-            const result = await craftCollection.findOne({_id: new ObjectId(req.params.id)});
+            const result = await craftCollection.findOne({ _id: new ObjectId(req.params.id) });
             res.send(result);
             //console.log(result);
         })
 
         //update product korar jonno data fetch kore client e dekhabo
-        app.get('/updateProduct/:id', async(req,res) =>{ 
-            const result = await craftCollection.findOne({_id: new ObjectId(req.params.id)});
+        app.get('/updateProduct/:id', async (req, res) => {
+            const result = await craftCollection.findOne({ _id: new ObjectId(req.params.id) });
             res.send(result);
-           
+
         })
 
         //client side e update confirm korar por
-        app.put('/updateProduct/:id', async(req,res) =>{
-            const query = {_id: new ObjectId(req.params.id)}
+        app.put('/updateProduct/:id', async (req, res) => {
+            const query = { _id: new ObjectId(req.params.id) }
             const updatedData = req.body;
             const options = { upsert: true }
             const data = {
                 $set: {
                     name: updatedData.name,
-                    subcategory: updatedData.subcategory, 
-                    description: updatedData.description, 
+                    subcategory: updatedData.subcategory,
+                    description: updatedData.description,
                     price: updatedData.price,
-                    rating: updatedData.rating, 
-                    time: updatedData.time, 
-                    customization: updatedData.customization, 
-                    stockStatus: updatedData.stockStatus, 
+                    rating: updatedData.rating,
+                    time: updatedData.time,
+                    customization: updatedData.customization,
+                    stockStatus: updatedData.stockStatus,
                     photo: updatedData.photo
                 },
             };
 
-            const result = await craftCollection.updateOne(query,data,options);
+            const result = await craftCollection.updateOne(query, data, options);
             console.log(result);
 
             res.send(result);
         })
 
-        app.delete('/delete/:id', async(req,res) =>{
+        app.delete('/delete/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await craftCollection.deleteOne(query);
             console.log(result);
             res.send(result);
         })
+
+        //get the first element of each category
+        app.get('/craft', async (req, res) => {
+
+            const result = await craftCollection.aggregate([
+                { $group: { _id: "$subcategory", item: { $first: "$$ROOT" } } }
+            ]).toArray();
+            
+            res.json(result);
+
+        });
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
