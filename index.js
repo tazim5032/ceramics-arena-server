@@ -29,6 +29,7 @@ async function run() {
         await client.connect();
 
         const craftCollection = client.db('craftDB').collection('craft');
+        const categoryCollection = client.db('craftDB').collection('allCategory');
 
         //add form theke db te pathabo
         //client e fetch operation korte hbe..so go to client and send data into body
@@ -39,9 +40,16 @@ async function run() {
             res.send(result); //result jabe client er .then er votore je data ace oikhane
         })
 
+        //all data pawar jonno
         app.get('/craft', async (req, res) => {
             //onekgula data tai array te convert kore nilam
             const result = await craftCollection.find({}).toArray();
+            res.send(result);
+        })
+
+        //sob category pawar jonno
+        app.get('/allCategory', async (req, res) => {
+            const result = await categoryCollection.find({}).toArray();
             res.send(result);
         })
 
@@ -101,15 +109,7 @@ async function run() {
         })
 
         //get the first element of each category
-        app.get('/craft', async (req, res) => {
-
-            const result = await craftCollection.aggregate([
-                { $group: { _id: "$subcategory", item: { $first: "$$ROOT" } } }
-            ]).toArray();
-            
-            res.json(result);
-
-        });
+        
 
 
         // Send a ping to confirm a successful connection
