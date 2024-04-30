@@ -2,17 +2,7 @@
 
 Welcome to the server-side documentation for our Ceramic and Craft Store website! This README provides information about the server architecture, setup, and deployment.
 
-## Server Architecture
 
-Our server-side architecture is designed to provide a stable and scalable platform for hosting our website. Here's an overview of the key components:
-
-1. **Web Server**: We use [Web Server Name] as our web server software to serve HTTP requests and host our website files.
-
-2. **Backend Framework**: Our backend is powered by [Backend Framework Name], which handles request processing, database interactions, and business logic.
-
-3. **Database**: We utilize [Database Name] as our database management system to store product information, user data, and other relevant data.
-
-4. **APIs**: We may have internal or external APIs for various functionalities such as payment processing, email notifications, and third-party integrations.
 
 ## Setup
 
@@ -44,9 +34,8 @@ Our server-side environment can be deployed on a cloud hosting platform, dedicat
 
 If you encounter any issues or need assistance with the server-side setup and deployment, please reach out to our technical support team:
 
-- Email: [Your Email Address]
-- Phone: [Your Phone Number]
-- Live Chat: [Chat Support URL]
+- Email: [mfittazim@gmail.com]
+
 
 ## Contributing
 
