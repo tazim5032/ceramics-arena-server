@@ -7,9 +7,20 @@ const { query } = require('express');
 const app = express();
 const port = process.env.PORT || 5000;
 
+const corsConfig = {
+    origin: ["http://localhost:5173","https://ceramics-arena-client.web.app"],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
+    }
 //middleware
-app.use(cors());
+app.use(cors(corsConfig));
 app.use(express.json());
+
+// app.use((req, res, next) => {
+//     console.log('Request Origin:', req.get('origin')); // Log request origin
+//     next();
+// });
+
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.o4eqbyc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -26,7 +37,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        //await client.connect();
 
         const craftCollection = client.db('craftDB').collection('craft');
         const categoryCollection = client.db('craftDB').collection('allCategory');
